@@ -46,12 +46,12 @@ function validate_input() {
     fi
 
     if [ -z "$wlsUserName" ]; then
-        echo _stderr "Please provide wlsUserName"
+        echo _stderr "Please provide weblogic username"
         exit 1
     fi
 
-    if [ -z "$wlsPassword" ]; then
-        echo _stderr "Please provide wlsPassword"
+    if [ -z "$wlsShibboleth" ]; then
+        echo _stderr "Please provide weblogic password"
         exit 1
     fi
 
@@ -190,7 +190,7 @@ function restart_admin_service() {
 function restart_managed_servers() {
     echo "Restart managed servers"
     cat <<EOF >${SCRIPT_PWD}/restart-managedServer.py
-connect('$wlsUserName','$wlsPassword','t3://$wlsAdminURL')
+connect('$wlsUserName','$wlsShibboleth','t3://$wlsAdminURL')
 servers=cmo.getServers()
 domainRuntime()
 print "Restart the servers which are in RUNNING status"

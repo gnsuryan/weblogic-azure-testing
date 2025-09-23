@@ -47,7 +47,7 @@ function validateInput()
        exit 1
    fi
 
-   if [ -z "$wlsPassword" ];
+   if [ -z "$wlsShibboleth" ];
    then
        echo _stderr "Please provide Weblogic password"
        exit 1
@@ -106,7 +106,7 @@ function createJDBCSource_model()
 {
 echo "Creating JDBC data source with name $jdbcDataSourceName"
 cat <<EOF >${scriptPath}/create_datasource.py
-connect('$wlsUserName','$wlsPassword','t3://$wlsAdminURL')
+connect('$wlsUserName','$wlsShibboleth','t3://$wlsAdminURL')
 edit("$hostName")
 startEdit()
 cd('/')
