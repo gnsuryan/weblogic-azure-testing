@@ -107,8 +107,8 @@
     },
     "resources": [
         {
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
-            "type": "${identifier.virtualMachines}/extensions",
+            "apiVersion": "${azure.apiVersionForVirtualMachines}",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "tags": "[parameters('tagsByResource')['${identifier.virtualMachinesExtensions}']]",
             "name": "[concat(variables('const_managedVMPrefix'), copyIndex(1),'/newuserscript')]",
             "location": "[parameters('location')]",

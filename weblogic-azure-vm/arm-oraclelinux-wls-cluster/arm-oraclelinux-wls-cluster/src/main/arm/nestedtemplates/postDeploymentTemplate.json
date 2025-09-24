@@ -63,7 +63,7 @@
     "resources": [
 		{
 		    "type": "${identifier.deploymentScripts}",
-		    "apiVersion": "${azure.apiVersionForManagedClusters}",
+		    "apiVersion": "${azure.apiVersionForDeployment}",
 			"tags": "[parameters('tagsByResource')['${identifier.deploymentScripts}']]",
 			"name": "[concat('postdeployscript-', parameters('_globalResourceNameSuffix'))]",
 			"kind": "AzureCLI",

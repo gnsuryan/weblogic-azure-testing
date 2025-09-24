@@ -66,8 +66,8 @@
     },
     "resources": [
         {
-            "type": "${identifier.dnszones}",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones",
+            "apiVersion": "${azure.apiVersionForDNSZone}",
             "tags": "[parameters('tagsByResource')['${identifier.dnszones}']]",
             "name": "[parameters('dnszoneName')]",
             "location": "[parameters('location')]",
@@ -76,8 +76,8 @@
             }
         },
         {
-            "type": "${identifier.dnszones}/A",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones/A",
+            "apiVersion": "${azure.apiVersionForDNSZone}",
             "condition": "[variables('const_hasARecords')]",
             "name": "[concat(parameters('dnszoneName'), '/', variables('const_dnszonesARecordSetNames')[copyIndex()])]",
             "copy": {
@@ -85,7 +85,7 @@
                 "count": "[length(parameters('dnszonesARecordSetNames'))]"
             },
             "dependsOn": [
-                "[resourceId('${identifier.dnszones}', parameters('dnszoneName'))]"
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnszoneName'))]"
             ],
             "properties": {
                 "TTL": "[parameters('ttl')]",
@@ -95,8 +95,8 @@
             }
         },
         {
-            "type": "${identifier.dnszones}/CNAME",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones/CNAME",
+            "apiVersion": "${azure.apiVersionForDNSZone}",
             "condition": "[variables('const_hasCNAMERecords')]",
             "name": "[concat(parameters('dnszoneName'),'/', variables('const_dnszonesCNAMERecordSetNames')[copyIndex()])]",
             "location": "[parameters('location')]",

@@ -117,7 +117,7 @@
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${cluster.database.start}",
             "properties": {
@@ -131,8 +131,8 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
-            "type": "${identifier.virtualMachines}/extensions",
+            "apiVersion": "${azure.apiVersionForVirtualMachines}",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "tags": "[parameters('tagsByResource')['${identifier.virtualMachinesExtensions}']]",
             "name": "[concat(parameters('adminVMName'),'/newuserscript')]",
             "location": "[parameters('location')]",
@@ -156,11 +156,11 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${cluster.database.end}",
             "dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -174,12 +174,12 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${database.oracle}",
             "condition": "[if(contains(parameters('databaseType'), 'oracle'), bool('true'), bool('false'))]",
             "dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -193,12 +193,12 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${database.postgresql}",
             "condition": "[if(contains(parameters('databaseType'), 'postgresql'), bool('true'), bool('false'))]",
             "dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -212,12 +212,12 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${database.mysql}",
             "condition": "[if(contains(parameters('databaseType'), 'mysql'), bool('true'), bool('false'))]",
             "dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -231,12 +231,12 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${database.sqlserver}",
             "condition": "[if(contains(parameters('databaseType'), 'sqlserver'), bool('true'), bool('false'))]",
             "dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
             "properties": {
                 "mode": "Incremental",

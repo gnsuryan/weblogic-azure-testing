@@ -112,7 +112,7 @@
     },
     "resources": [
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "name": "${cluster.dns.start}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "type": "Microsoft.Resources/deployments",
@@ -126,7 +126,7 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "type": "Microsoft.Resources/deployments",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "createDNSZone",
@@ -166,7 +166,7 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "type": "Microsoft.Resources/deployments",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "updateDNSZone",
@@ -221,7 +221,7 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "name": "${cluster.dns.end}",
             "type": "Microsoft.Resources/deployments",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",

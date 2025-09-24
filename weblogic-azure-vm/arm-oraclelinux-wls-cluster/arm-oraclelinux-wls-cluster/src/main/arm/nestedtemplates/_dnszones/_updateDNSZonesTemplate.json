@@ -121,7 +121,7 @@
             "type": "Microsoft.Resources/deployments",
             "name": "uamiDeployment",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -142,8 +142,8 @@
             }
         },
         {
-            "type": "${identifier.deploymentScripts}",
-            "apiVersion": "${azure.apiVersionForManagedClusters}",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "${azure.apiVersionForDeploymentScript}",
             "tags": "[parameters('tagsByResource')['${identifier.deploymentScripts}']]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'uamiDeployment')]"
@@ -153,7 +153,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
                 }
             },
             "kind": "AzureCLI",
@@ -204,7 +204,7 @@
                     },
                     {
                         "name": "MANAGED_IDENTITY_ID",
-                        "value": "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
+                        "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
                     },
                     {
                         "name": "RESOURCE_GROUP_NAME",

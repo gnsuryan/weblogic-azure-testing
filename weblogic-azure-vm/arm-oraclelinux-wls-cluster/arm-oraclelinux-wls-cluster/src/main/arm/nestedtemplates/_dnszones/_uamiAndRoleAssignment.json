@@ -23,7 +23,7 @@
   },
   "resources": [
     {
-      "type": "${identifier.userAssignedIdentities}",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "apiVersion": "${azure.apiVersionForIdentity}",
       "tags": "[parameters('tagsByResource')['${identifier.userAssignedIdentities}']]",
       "name": "[parameters('uamiName')]",
@@ -31,7 +31,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "${azure.apiVersionForContainerRegistries}",
+      "apiVersion": "${azure.apiVersionForDeployment}",
       "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
       "name": "[variables('name_deploymentScriptContributorRoleAssignmentName')]",
       "subscriptionId": "[subscription().subscriptionId]",
@@ -46,7 +46,7 @@
             "value": "[variables('const_roleDefinitionIdOfContributor')]"
           },
           "principalId": {
-            "value": "[reference(resourceId('${identifier.userAssignedIdentities}', parameters('uamiName'))).principalId]"
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('uamiName'))).principalId]"
           }
         },
         "template": {
@@ -92,7 +92,7 @@
   "outputs": {
     "uamiIdForDeploymentScript": {
       "type": "string",
-      "value": "[resourceId('${identifier.userAssignedIdentities}', parameters('uamiName'))]"
+      "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('uamiName'))]"
     }
   }
 }

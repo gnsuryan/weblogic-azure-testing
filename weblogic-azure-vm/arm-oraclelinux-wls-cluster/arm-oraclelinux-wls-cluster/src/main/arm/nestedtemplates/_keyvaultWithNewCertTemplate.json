@@ -74,7 +74,7 @@
     },
     "resources": [
         {
-            "type": "${identifier.userAssignedIdentities}",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "${azure.apiVersionForIdentity}",
             "tags": "[parameters('tagsByResource')['${identifier.userAssignedIdentities}']]",
             "name": "[variables('name_deploymentScriptUserDefinedManagedIdentity')]",
@@ -85,18 +85,18 @@
             "apiVersion": "${azure.apiVersionForRoleAssignment}",
             "name": "[variables('name_roleAssignmentName')]",
             "dependsOn": [
-                "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
             ],
             "properties": {
                 "description": "Assign subscription scope role to User Assigned Managed Identity ",
-                "principalId": "[reference(resourceId('${identifier.userAssignedIdentities}',variables('name_deploymentScriptUserDefinedManagedIdentity'))).principalId]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('name_deploymentScriptUserDefinedManagedIdentity'))).principalId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('const_roleDefinitionIdOfContributor'))]"
             }
         },
         {
-            "type": "${identifier.vaults}",
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "${azure.apiVersionForKeyVault}",
             "tags": "[parameters('tagsByResource')['${identifier.vaults}']]",
             "name": "[parameters('keyvaultName')]",
             "dependsOn": [
@@ -111,7 +111,7 @@
                 "tenantId": "[subscription().tenantId]",
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))).principalId]",
+                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))).principalId]",
                         "tenantId": "[subscription().tenantId]",
                         "permissions": "[parameters('permission')]"
                     }
@@ -124,18 +124,18 @@
             }
         },
         {
-            "type": "${identifier.deploymentScripts}",
-            "apiVersion": "${azure.apiVersionForManagedClusters}",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "${azure.apiVersionForDeploymentScript}",
             "tags": "[parameters('tagsByResource')['${identifier.deploymentScripts}']]",
             "name": "[concat('script-generate-certificate-', parameters('_globalResourceNameSuffix'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('${identifier.vaults}', parameters('keyvaultName'))]"
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyvaultName'))]"
             ],
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
                 }
             },
             "kind": "AzurePowerShell",

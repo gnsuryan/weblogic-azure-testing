@@ -57,7 +57,7 @@
       },
       {
          "type": "Microsoft.Resources/deployments",
-         "apiVersion": "${azure.apiVersionForContainerRegistries}",
+         "apiVersion": "${azure.apiVersionForDeployment}",
          "name": "[variables('name_postDeploymentScriptRoleAssignment')]",
          "location": "[parameters('location')]",
          "subscriptionId": "[subscription().subscriptionId]",

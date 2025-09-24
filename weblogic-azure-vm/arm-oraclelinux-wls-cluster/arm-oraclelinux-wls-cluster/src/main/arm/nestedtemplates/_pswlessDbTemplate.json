@@ -155,7 +155,7 @@
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${cluster.pswless.database.start}",
             "properties": {
@@ -169,7 +169,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "[concat('assignDbIdentityTo',variables('const_managedVMPrefix'), copyIndex(1))]",
             "copy": {
@@ -190,7 +190,7 @@
                         "value": "[variables('obj_dbIdentity')]"
                     },
                     "existingIdentities": {
-                        "value": "[if(equals(reference(resourceId('${identifier.virtualMachines}',concat(variables('const_managedVMPrefix'), copyIndex(1))), '${azure.apiVersionForAvailabilitySets}', 'Full').identity.type,'UserAssigned'),reference(resourceId('${identifier.virtualMachines}',concat(variables('const_managedVMPrefix'), copyIndex(1))), '${azure.apiVersionForAvailabilitySets}', 'Full').identity.userAssignedIdentities, variables('obj_empty'))]"
+                        "value": "[if(equals(reference(resourceId('Microsoft.Compute/virtualMachines',concat(variables('const_managedVMPrefix'), copyIndex(1))), '${azure.apiVersionForVirtualMachines}', 'Full').identity.type,'UserAssigned'),reference(resourceId('Microsoft.Compute/virtualMachines',concat(variables('const_managedVMPrefix'), copyIndex(1))), '${azure.apiVersionForVirtualMachines}', 'Full').identity.userAssignedIdentities, variables('obj_empty'))]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -200,7 +200,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "installJdbcLibsTemplate",
             "condition": "[or(equals(parameters('databaseType'),'mysql'), equals(parameters('databaseType'),'postgresql'))]",
@@ -258,7 +258,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "passwordlessDatasourceDeployment",
             "dependsOn": [
@@ -315,7 +315,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
+            "apiVersion": "${azure.apiVersionForDeployment}",
             "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
             "name": "${cluster.pswless.database.end}",
             "dependsOn": [
