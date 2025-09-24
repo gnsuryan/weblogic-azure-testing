@@ -42,7 +42,7 @@
             "type": "object",
             "defaultValue": {},
             "metadata": {
-                "description": "${label.tagsLabel}"
+                "description": "Tags for the resources."
             }
         },
         "ttl": {
@@ -66,18 +66,18 @@
     },
     "resources": [
         {
-            "type": "${identifier.dnszones}",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones",
+            "apiVersion": "2023-07-01-preview",
             "name": "[parameters('dnszoneName')]",
-            "tags": "[parameters('tagsByResource')['${identifier.dnszones}']]",
+            "tags": "[parameters('tagsByResource')['Microsoft.Network/dnszones']]",
             "location": "[parameters('location')]",
             "properties": {
                 "zoneType": "Public"
             }
         },
         {
-            "type": "${identifier.dnszones}/A",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones/A",
+            "apiVersion": "2023-07-01-preview",
             "condition": "[variables('const_hasARecords')]",
             "name": "[concat(parameters('dnszoneName'), '/', variables('const_dnszonesARecordSetNames')[copyIndex()])]",
             "copy": {
@@ -85,7 +85,7 @@
                 "count": "[length(parameters('dnszonesARecordSetNames'))]"
             },
             "dependsOn": [
-                "[resourceId('${identifier.dnszones}', parameters('dnszoneName'))]"
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnszoneName'))]"
             ],
             "properties": {
                 "TTL": "[parameters('ttl')]",
@@ -95,8 +95,8 @@
             }
         },
         {
-            "type": "${identifier.dnszones}/CNAME",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}-preview",
+            "type": "Microsoft.Network/dnszones/CNAME",
+            "apiVersion": "2023-07-01-preview",
             "condition": "[variables('const_hasCNAMERecords')]",
             "name": "[concat(parameters('dnszoneName'),'/', variables('const_dnszonesCNAMERecordSetNames')[copyIndex()])]",
             "location": "[parameters('location')]",
