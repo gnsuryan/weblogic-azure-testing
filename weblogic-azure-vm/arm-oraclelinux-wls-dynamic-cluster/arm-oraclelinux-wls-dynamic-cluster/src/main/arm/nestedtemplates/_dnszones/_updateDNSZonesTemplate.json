@@ -113,7 +113,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "name": "uamiDeployment",
-            "apiVersion": "2023-07-01",
+            "apiVersion": "${azure.apiVersionForContainerRegistries}",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -131,8 +131,8 @@
             }
         },
         {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2023-08-01",
+            "type": "${identifier.deploymentScripts}",
+            "apiVersion": "${azure.apiVersionForManagedClusters}",
             "name": "[concat('script-create-dns-records-', parameters('_globalResourceNameSuffix'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'uamiDeployment')]"
@@ -141,13 +141,13 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
+                    "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
                 }
             },
             "kind": "AzureCLI",
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
-                "AzCliVersion": "2.53.0",
+                "AzCliVersion": "${azure.cli.version}",
                 "timeout": "PT30M",
                 "environmentVariables": [
                     {
@@ -192,7 +192,7 @@
                     },
                     {
                         "name": "MANAGED_IDENTITY_ID",
-                        "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
+                        "value": "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
                     },
                     {
                         "name": "RESOURCE_GROUP_NAME",

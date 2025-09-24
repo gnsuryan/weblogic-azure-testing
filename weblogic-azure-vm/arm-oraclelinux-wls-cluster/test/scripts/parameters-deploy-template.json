@@ -120,49 +120,49 @@
     },
     "tagsByResource": {
         "value": {
-            "Microsoft.Network/applicationGateways": {
+            "${identifier.applicationGateways}": {
                 "Owner": "test"
             },
-            "Microsoft.Compute/availabilitySets": {
+            "${identifier.availabilitySets}": {
                 "Owner": "test"
             },
-            "Microsoft.Resources/deploymentScripts": {
+            "${identifier.deploymentScripts}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/dnszones": {
+            "${identifier.dnszones}": {
                 "Owner": "test"
             },
-            "Microsoft.KeyVault/vaults": {
+            "${identifier.vaults}": {
                 "Owner": "test"
             },
-            "Microsoft.ManagedIdentity/userAssignedIdentities": {
+            "${identifier.userAssignedIdentities}": {
                 "Owner": "test"
             },
-            "Microsoft resources deployment": {
+            "${identifier.resourcesDeployment}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/networkInterfaces": {
+            "${identifier.networkInterfaces}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/networkSecurityGroups": {
+            "${identifier.networkSecurityGroups}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/privateEndpoints": {
+            "${identifier.privateEndpoints}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/publicIPAddresses": {
+            "${identifier.publicIPAddresses}": {
                 "Owner": "test"
             },
-            "Microsoft.Storage/storageAccounts": {
+            "${identifier.storageAccounts}": {
                 "Owner": "test"
             },
-            "Microsoft.Compute/virtualMachines": {
+            "${identifier.virtualMachines}": {
                 "Owner": "test"
             },
-            "Virtual machine extension": {
+            "${identifier.virtualMachinesExtensions}": {
                 "Owner": "test"
             },
-            "Microsoft.Network/virtualNetworks": {
+            "${identifier.virtualNetworks}": {
                 "Owner": "test"
             }
         }

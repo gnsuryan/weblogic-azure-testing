@@ -302,16 +302,16 @@
       "name_subnet": "[parameters('subnetName')]",
       "name_virtualNetwork": "[parameters('virtualNetworkName')]",
       "name_vmMachine": "[concat(parameters('managedServerPrefix'),'VM')]",
-      "ref_backendAddressPool": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools', variables('name_appGateway'),variables('name_backendAddressPool'))]",
-      "ref_backendHttpSettings": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', variables('name_appGateway'),variables('name_httpSetting'))]",
-      "ref_backendProbe": "[resourceId('Microsoft.Network/applicationGateways/probes', variables('name_appGateway'),variables('name_probe'))]",
-      "ref_frontendHTTPPort": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts', variables('name_appGateway'),variables('name_httpPort'))]",
-      "ref_frontendHTTPSPort": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts', variables('name_appGateway'),variables('name_httpsPort'))]",
-      "ref_frontendIPConfiguration": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', variables('name_appGateway'),variables('name_frontEndIPConfig'))]",
-      "ref_httpListener": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', variables('name_appGateway'),variables('name_httpListener'))]",
-      "ref_httpsListener": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', variables('name_appGateway'),variables('name_httpsListener'))]",
-      "ref_sslCertificate": "[resourceId('Microsoft.Network/applicationGateways/sslCertificates', variables('name_appGateway'),variables('name_appGatewayCertificate'))]",
-      "ref_subnet": "[resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', variables('name_virtualNetwork'), variables('name_subnet'))]",
+      "ref_backendAddressPool": "[resourceId('${identifier.applicationGateways}/backendAddressPools', variables('name_appGateway'),variables('name_backendAddressPool'))]",
+      "ref_backendHttpSettings": "[resourceId('${identifier.applicationGateways}/backendHttpSettingsCollection', variables('name_appGateway'),variables('name_httpSetting'))]",
+      "ref_backendProbe": "[resourceId('${identifier.applicationGateways}/probes', variables('name_appGateway'),variables('name_probe'))]",
+      "ref_frontendHTTPPort": "[resourceId('${identifier.applicationGateways}/frontendPorts', variables('name_appGateway'),variables('name_httpPort'))]",
+      "ref_frontendHTTPSPort": "[resourceId('${identifier.applicationGateways}/frontendPorts', variables('name_appGateway'),variables('name_httpsPort'))]",
+      "ref_frontendIPConfiguration": "[resourceId('${identifier.applicationGateways}/frontendIPConfigurations', variables('name_appGateway'),variables('name_frontEndIPConfig'))]",
+      "ref_httpListener": "[resourceId('${identifier.applicationGateways}/httpListeners', variables('name_appGateway'),variables('name_httpListener'))]",
+      "ref_httpsListener": "[resourceId('${identifier.applicationGateways}/httpListeners', variables('name_appGateway'),variables('name_httpsListener'))]",
+      "ref_sslCertificate": "[resourceId('${identifier.applicationGateways}/sslCertificates', variables('name_appGateway'),variables('name_appGatewayCertificate'))]",
+      "ref_subnet": "[resourceId(parameters('virtualNetworkResourceGroupName'), '${identifier.virtualNetworks}/subnets', variables('name_virtualNetwork'), variables('name_subnet'))]",
       "name_customHostnameGeneratorscriptFile": "generateCustomHostNameVerifier.sh",
       "name_customHostnameVerifierJavaFile": "src/main/java/WebLogicCustomHostNameVerifier.java",
       "name_customHostnameValuesTemplate": "src/main/java/HostNameValuesTemplate.txt",
@@ -339,8 +339,8 @@
    "resources": [
       {
          "type": "Microsoft.Resources/deployments",
-         "apiVersion": "2023-07-01",
-         "name": "ffa02caf-ecb9-59df-82ce-74b9b0247c50",
+         "apiVersion": "${azure.apiVersionForContainerRegistries}",
+         "name": "${cluster.addnode.start}",
          "properties": {
             "mode": "Incremental",
             "template": {
@@ -351,8 +351,8 @@
          }
       },
       {
-         "apiVersion": "2023-06-01",
-         "type": "Microsoft.Network/publicIPAddresses",
+         "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+         "type": "${identifier.publicIPAddresses}",
          "name": "[concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')),variables('name_publicIPAddress'))]",
          "location": "[parameters('location')]",
          "copy": {
@@ -367,14 +367,14 @@
          }
       },
       {
-         "apiVersion": "2023-06-01",
-         "type": "Microsoft.Network/virtualNetworks/subnets",
+         "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+         "type": "${identifier.virtualNetworks}/subnets",
          "name": "[concat(variables('name_virtualNetwork'), '/', variables('name_subnet'))]",
          "condition": "[and(empty(variables('name_virtualNetwork')), empty(variables('name_subnet')))]"
       },
       {
-         "apiVersion": "2023-06-01",
-         "type": "Microsoft.Network/networkInterfaces",
+         "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+         "type": "${identifier.networkInterfaces}",
          "name": "[concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')), variables('name_nic'))]",
          "location": "[parameters('location')]",
          "copy": {
@@ -382,7 +382,7 @@
             "count": "[parameters('numberOfNewNodes')]"
          },
          "dependsOn": [
-            "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')),variables('name_publicIPAddress')))]"
+            "[resourceId('${identifier.publicIPAddresses}/', concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')),variables('name_publicIPAddress')))]"
          ],
          "properties": {
             "ipConfigurations": [
@@ -391,7 +391,7 @@
                   "properties": {
                      "privateIPAllocationMethod": "Dynamic",
                      "publicIPAddress": {
-                        "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')),variables('name_publicIPAddress')))]"
+                        "id": "[resourceId('${identifier.publicIPAddresses}',concat(variables('name_vmMachine'),copyIndex(variables('const_appNodeMachineOffset')),variables('name_publicIPAddress')))]"
                      },
                      "subnet": {
                         "id": "[variables('ref_subnet')]"
@@ -405,8 +405,8 @@
          }
       },
       {
-         "apiVersion": "2024-11-01",
-         "type": "Microsoft.Compute/virtualMachines",
+         "apiVersion": "${azure.apiVersionForAvailabilitySets}",
+         "type": "${identifier.virtualMachines}",
          "name": "[concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset')))]",
          "location": "[parameters('location')]",
          "copy": {
@@ -418,7 +418,7 @@
          ],
          "properties": {
             "availabilitySet": {
-               "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('name_availabilitySet'))]"
+               "id": "[resourceId('${identifier.availabilitySets}',variables('name_availabilitySet'))]"
             },
             "hardwareProfile": {
                "vmSize": "[variables('const_vmSize')]"
@@ -446,14 +446,14 @@
             "networkProfile": {
                "networkInterfaces": [
                   {
-                     "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset')), variables('name_nic')))]"
+                     "id": "[resourceId('${identifier.networkInterfaces}',concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset')), variables('name_nic')))]"
                   }
                ]
             },
             "diagnosticsProfile": {
                "bootDiagnostics": {
                   "enabled": true,
-                  "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName')), '2025-01-01').primaryEndpoints.blob]"
+                  "storageUri": "[reference(resourceId('${identifier.storageAccounts}/', parameters('storageAccountName')), '${azure.apiVersionForStorage}').primaryEndpoints.blob]"
                }
             }
          },
@@ -464,8 +464,8 @@
          }
       },
       {
-         "type": "Microsoft.Network/applicationGateways",
-         "apiVersion": "2023-06-01",
+         "type": "${identifier.applicationGateways}",
+         "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
          "condition": "[parameters('appGatewaySettings').enable]",
          "name": "[variables('name_appGateway')]",
          "location": "[parameters('location')]",
@@ -482,19 +482,19 @@
                   "name": "appGatewayIpConfig",
                   "properties": {
                      "subnet": {
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('name_virtualNetwork'),variables('name_appGatewaySubnet'))]"
+                        "id": "[resourceId('${identifier.virtualNetworks}/subnets',variables('name_virtualNetwork'),variables('name_appGatewaySubnet'))]"
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/gatewayIPConfigurations"
+                  "type": "${identifier.applicationGateways}/gatewayIPConfigurations"
                }
             ],
             "frontendIPConfigurations": [
                {
                   "name": "appGwPublicFrontendIp",
-                  "type": "Microsoft.Network/applicationGateways/frontendIPConfigurations",
+                  "type": "${identifier.applicationGateways}/frontendIPConfigurations",
                   "properties": {
                      "publicIPAddress": {
-                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('appGatewaySettings').publicIPName)]"
+                        "id": "[resourceId('${identifier.publicIPAddresses}', parameters('appGatewaySettings').publicIPName)]"
                      }
                   }
                }
@@ -505,14 +505,14 @@
                   "properties": {
                      "port": "[int(variables('const_appGatewayFrontEndHTTPPort'))]"
                   },
-                  "type": "Microsoft.Network/applicationGateways/frontendPorts"
+                  "type": "${identifier.applicationGateways}/frontendPorts"
                },
                {
                   "name": "https_port",
                   "properties": {
                      "port": "[int(variables('const_appGatewayFrontEndHTTPSPort'))]"
                   },
-                  "type": "Microsoft.Network/applicationGateways/frontendPorts"
+                  "type": "${identifier.applicationGateways}/frontendPorts"
                }
             ],
             "sslCertificates": [
@@ -538,7 +538,7 @@
                         }
                      ]
                   },
-                  "type": "Microsoft.Network/applicationGateways/backendAddressPools"
+                  "type": "${identifier.applicationGateways}/backendAddressPools"
                }
             ],
             "backendHttpSettingsCollection": [
@@ -556,7 +556,7 @@
                         "id": "[variables('ref_backendProbe')]"
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection"
+                  "type": "${identifier.applicationGateways}/backendHttpSettingsCollection"
                }
             ],
             "httpListeners": [
@@ -572,7 +572,7 @@
                      "protocol": "Http",
                      "requireServerNameIndication": false
                   },
-                  "type": "Microsoft.Network/applicationGateways/httpListeners"
+                  "type": "${identifier.applicationGateways}/httpListeners"
                },
                {
                   "name": "HTTPSListener",
@@ -589,7 +589,7 @@
                         "id": "[variables('ref_sslCertificate')]"
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/httpListeners"
+                  "type": "${identifier.applicationGateways}/httpListeners"
                }
 
             ],
@@ -609,7 +609,7 @@
                         "id": "[variables('ref_backendHttpSettings')]"
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/requestRoutingRules"
+                  "type": "${identifier.applicationGateways}/requestRoutingRules"
                },
                {
                   "name": "HTTPSRoutingRule",
@@ -626,7 +626,7 @@
                         "id": "[variables('ref_backendHttpSettings')]"
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/requestRoutingRules"
+                  "type": "${identifier.applicationGateways}/requestRoutingRules"
                }
             ],
             "probes": [
@@ -646,7 +646,7 @@
                         ]
                      }
                   },
-                  "type": "Microsoft.Network/applicationGateways/probes"
+                  "type": "${identifier.applicationGateways}/probes"
                }
             ],
             "enableHttp2": false,
@@ -657,8 +657,8 @@
          }
       },
       {
-         "apiVersion": "2024-11-01",
-         "type": "Microsoft.Compute/virtualMachines/extensions",
+         "apiVersion": "${azure.apiVersionForAvailabilitySets}",
+         "type": "${identifier.virtualMachines}/extensions",
          "name": "[concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset')), '/newuserscript')]",
          "location": "[parameters('location')]",
          "copy": {
@@ -666,7 +666,7 @@
             "count": "[parameters('numberOfNewNodes')]"
          },
          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines/', concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset'))))]"
+            "[resourceId('${identifier.virtualMachines}/', concat(variables('name_vmMachine'), copyIndex(variables('const_appNodeMachineOffset'))))]"
          ],
          "properties": {
             "publisher": "Microsoft.Azure.Extensions",
@@ -685,13 +685,13 @@
                ]
             },
             "protectedSettings": {
-				"commandToExecute": "[concat('sh',' ',variables('name_scriptFile'),' <<< \"',parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('managedServerPrefix'),' ', copyIndex(variables('const_appNodeMachineOffset')),' ', parameters('adminURL'),' ',parameters('adminVMName'),' ',variables('const_wlsHome'),' ',variables('const_wlsDomainPath'),' ',parameters('storageAccountName'), ' ', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2025-01-01').keys[0].value,' ', variables('const_mountPointPath'),' ', if(parameters('aadsSettings').enable, parameters('aadsSettings').certificateBase64String, 'null'),' ',if(parameters('aadsSettings').enable, parameters('aadsSettings').publicIP, 'null'),' ', if(parameters('aadsSettings').enable, parameters('aadsSettings').serverHost, 'null'),' ',if(parameters('appGatewaySettings').enable, reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('appGatewaySettings').publicIPName),'2023-06-01').dnsSettings.fqdn, 'null'), ' ',parameters('elkSettings').enable, ' ',parameters('elkSettings').elasticsearchEndpoint,' ', parameters('elkSettings').elasticsearchUserName,' ', parameters('elkSettings').elasticsearchPassword, ' ', array.join(parameters('elkSettings').logsToIntegrate), ' ',parameters('elkSettings').logIndex, ' ', parameters('enableCoherence'),' ',if(parameters('enableDNSConfiguration'),parameters('customDNSNameForAdminServer'),parameters('adminVMName')),' ',parameters('dnsLabelPrefix'),' ',parameters('location'),' ',parameters('customSSLSettings').enable,' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStoreBase64String, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStorePassPhrase, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStoreType, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStoreBase64String, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStorePassPhrase, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStoreType, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').privateKeyAlias, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').privateKeyPassPhrase, 'null'),'\"')]"            }
+				"commandToExecute": "[concat('sh',' ',variables('name_scriptFile'),' <<< \"',parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('managedServerPrefix'),' ', copyIndex(variables('const_appNodeMachineOffset')),' ', parameters('adminURL'),' ',parameters('adminVMName'),' ',variables('const_wlsHome'),' ',variables('const_wlsDomainPath'),' ',parameters('storageAccountName'), ' ', listKeys(resourceId('${identifier.storageAccounts}', parameters('storageAccountName')), '${azure.apiVersionForStorage}').keys[0].value,' ', variables('const_mountPointPath'),' ', if(parameters('aadsSettings').enable, parameters('aadsSettings').certificateBase64String, 'null'),' ',if(parameters('aadsSettings').enable, parameters('aadsSettings').publicIP, 'null'),' ', if(parameters('aadsSettings').enable, parameters('aadsSettings').serverHost, 'null'),' ',if(parameters('appGatewaySettings').enable, reference(resourceId('${identifier.publicIPAddresses}', parameters('appGatewaySettings').publicIPName),'${azure.apiVersionForNetworkInterfaces}').dnsSettings.fqdn, 'null'), ' ',parameters('elkSettings').enable, ' ',parameters('elkSettings').elasticsearchEndpoint,' ', parameters('elkSettings').elasticsearchUserName,' ', parameters('elkSettings').elasticsearchPassword, ' ', array.join(parameters('elkSettings').logsToIntegrate), ' ',parameters('elkSettings').logIndex, ' ', parameters('enableCoherence'),' ',if(parameters('enableDNSConfiguration'),parameters('customDNSNameForAdminServer'),parameters('adminVMName')),' ',parameters('dnsLabelPrefix'),' ',parameters('location'),' ',parameters('customSSLSettings').enable,' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStoreBase64String, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStorePassPhrase, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customIdentityKeyStoreType, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStoreBase64String, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStorePassPhrase, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').customTrustKeyStoreType, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').privateKeyAlias, 'null'),' ',if(parameters('customSSLSettings').enable,parameters('customSSLSettings').privateKeyPassPhrase, 'null'),'\"')]"            }
          }
       },
       {
          "type": "Microsoft.Resources/deployments",
-         "apiVersion": "2023-07-01",
-         "name": "2452bb0e-13d9-5ad3-816b-d645ba5198c4",
+         "apiVersion": "${azure.apiVersionForContainerRegistries}",
+         "name": "${cluster.addnode.end}",
          "dependsOn": [
             "virtualMachineExtensionLoop"
          ],
