@@ -74,7 +74,7 @@
             "type": "object",
             "defaultValue": {},
             "metadata": {
-                "description": "${label.tagsLabel}"
+                "description": "Tags for the resources."
             }
         },
         "ttl": {
@@ -120,8 +120,8 @@
         {
             "type": "Microsoft.Resources/deployments",
             "name": "uamiDeployment",
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
-            "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
+            "apiVersion": "2023-07-01",
+            "tags": "[parameters('tagsByResource')['Microsoft resources deployment']]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -145,9 +145,9 @@
             }
         },
         {
-            "type": "${identifier.deploymentScripts}",
-            "apiVersion": "${azure.apiVersionForManagedClusters}",
-            "tags": "[parameters('tagsByResource')['${identifier.deploymentScripts}']]",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2023-08-01",
+            "tags": "[parameters('tagsByResource')['Microsoft.Resources/deploymentScripts']]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'uamiDeployment')]"
             ],
@@ -156,13 +156,13 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]": {}
                 }
             },
             "kind": "AzureCLI",
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
-                "AzCliVersion": "${azure.cli.version}",
+                "AzCliVersion": "2.53.0",
                 "timeout": "PT30M",
                 "environmentVariables": [
                     {
@@ -207,7 +207,7 @@
                     },
                     {
                         "name": "MANAGED_IDENTITY_ID",
-                        "value": "[resourceId('${identifier.userAssignedIdentities}', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
+                        "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('name_deploymentScriptUserDefinedManagedIdentity'))]"
                     },
                     {
                         "name": "RESOURCE_GROUP_NAME",
