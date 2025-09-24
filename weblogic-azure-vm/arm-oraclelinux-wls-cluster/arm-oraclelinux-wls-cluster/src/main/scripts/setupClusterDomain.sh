@@ -627,7 +627,7 @@ function create_managedSetup(){
     echo "Completed managed server model files"
     sudo chown -R $username:$groupname $DOMAIN_PATH
     # Updating managed-domain.yaml using updateDomain.sh on existing domain created by create_admin_model 
-    # wlsPassword is accepted from stdin to support old and new weblogic-deploy tool version
+    # wlsShibboleth is accepted from stdin to support old and new weblogic-deploy tool version
     runuser -l oracle -c ". $oracleHome/oracle_common/common/bin/setWlstEnv.sh; $DOMAIN_PATH/weblogic-deploy/bin/updateDomain.sh -admin_url $adminWlstURL -admin_user $wlsUserName -oracle_home $oracleHome -domain_home $DOMAIN_PATH/${wlsDomainName}  -domain_type WLS -model_file $DOMAIN_PATH/managed-domain.yaml <<< $wlsShibboleth"
     if [[ $? != 0 ]]; then
        echo "Error : Managed setup failed"
@@ -997,7 +997,7 @@ CURRENT_DATE=`date +%s`
 MIN_CERT_VALIDITY="1"
 
 #read arguments from stdin
-read wlsDomainName wlsUserName wlsPassword wlsServerName wlsAdminHost adminVMNamePrefix globalResourceNameSuffix numberOfInstances managedVMPrefix managedServerPrefix oracleHome storageAccountName storageAccountKey mountpointPath isHTTPAdminListenPortEnabled isCustomSSLEnabled customDNSNameForAdminServer dnsLabelPrefix location virtualNetworkNewOrExisting storageAccountPrivateIp customIdentityKeyStoreData customIdentityKeyStorePassPhrase customIdentityKeyStoreType customTrustKeyStoreData customTrustKeyStorePassPhrase customTrustKeyStoreType serverPrivateKeyAlias serverPrivateKeyPassPhrase
+read wlsDomainName wlsUserName wlsShibboleth wlsServerName wlsAdminHost adminVMNamePrefix globalResourceNameSuffix numberOfInstances managedVMPrefix managedServerPrefix oracleHome storageAccountName storageAccountKey mountpointPath isHTTPAdminListenPortEnabled isCustomSSLEnabled customDNSNameForAdminServer dnsLabelPrefix location virtualNetworkNewOrExisting storageAccountPrivateIp customIdentityKeyStoreData customIdentityKeyStorePassPhrase customIdentityKeyStoreType customTrustKeyStoreData customTrustKeyStorePassPhrase customTrustKeyStoreType serverPrivateKeyAlias serverPrivateKeyPassPhrase
 
 isHTTPAdminListenPortEnabled="${isHTTPAdminListenPortEnabled,,}"
 isCustomSSLEnabled="${isCustomSSLEnabled,,}"

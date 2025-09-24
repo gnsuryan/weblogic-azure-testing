@@ -18,7 +18,7 @@ function usage() {
 function validate_input() {
 
     # parse base64 string
-    wlsPassword=$(echo "${wlsPassword}" | base64 -d)
+    wlsShibboleth=$(echo "${wlsShibboleth}" | base64 -d)
 
     if [ -z "$oracleHome" ]; then
         echo _stderr "Please provide oracleHome"
@@ -220,7 +220,7 @@ EOF
 }
 
 #read arguments from stdin
-read oracleHome domainPath wlsServerName wlsAdminHost wlsAdminPort wlsUserName wlsPassword databaseType enablePswlessConnection
+read oracleHome domainPath wlsServerName wlsAdminHost wlsAdminPort wlsUserName wlsShibboleth databaseType enablePswlessConnection
 
 export curlMaxTime=120 # seconds
 export gitUrl4AzureIdentityExtensionPomFile="https://raw.githubusercontent.com/oracle/weblogic-azure/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml"

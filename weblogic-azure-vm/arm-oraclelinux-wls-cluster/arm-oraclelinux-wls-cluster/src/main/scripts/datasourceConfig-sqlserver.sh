@@ -18,7 +18,7 @@ function usage()
 function validateInput()
 {
    # parse base64 string
-   wlsPassword=$(echo "${wlsPassword}" | base64 -d)
+   wlsShibboleth=$(echo "${wlsShibboleth}" | base64 -d)
    jdbcDataSourceName=$(echo "${jdbcDataSourceName}" | base64 -d)
    dsConnectionURL=$(echo "${dsConnectionURL}" | base64 -d)
    dsPassword=$(echo "${dsPassword}" | base64 -d)
@@ -158,7 +158,7 @@ function createTempFolder()
 #main
 
 #read arguments from stdin
-read oracleHome wlsAdminHost wlsAdminPort wlsUserName wlsPassword jdbcDataSourceName dsConnectionURL dsUser dsPassword dbGlobalTranPro enablePswlessConnection wlsClusterName
+read oracleHome wlsAdminHost wlsAdminPort wlsUserName wlsShibboleth jdbcDataSourceName dsConnectionURL dsUser dsPassword dbGlobalTranPro enablePswlessConnection wlsClusterName
 
 if [ -z "$wlsClusterName" ];
 then

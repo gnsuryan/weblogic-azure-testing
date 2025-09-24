@@ -140,7 +140,7 @@ EOF
 SCRIPT_PWD=`pwd`
 
 #read arguments from stdin
-read wlsAdminServerName wlsUserName wlsPassword wlsAdminHost wlsAdminPort AppGWHostName oracleHome
+read wlsAdminServerName wlsUserName wlsShibboleth wlsAdminHost wlsAdminPort AppGWHostName oracleHome
 
 wlsAdminURL=$wlsAdminHost:$wlsAdminPort
 
