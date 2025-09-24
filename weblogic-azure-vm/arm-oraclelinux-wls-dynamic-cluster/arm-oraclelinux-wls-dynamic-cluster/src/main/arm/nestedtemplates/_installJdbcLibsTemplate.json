@@ -100,8 +100,8 @@
     },
     "resources": [
         {
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
-            "type": "${identifier.virtualMachines}/extensions",
+            "apiVersion": "2024-11-01",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(variables('const_managedVMPrefix'), copyIndex(1),'/newuserscript')]",
             "location": "[parameters('location')]",
             "copy": {
@@ -124,8 +124,8 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
-            "type": "${identifier.virtualMachines}/extensions",
+            "apiVersion": "2024-11-01",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('adminVMName'), '/newuserscript')]",
             "location": "[parameters('location')]",
             "properties": {
