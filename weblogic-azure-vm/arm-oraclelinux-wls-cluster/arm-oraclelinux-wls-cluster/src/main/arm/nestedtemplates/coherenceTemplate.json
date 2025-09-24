@@ -147,7 +147,7 @@
             "type": "object",
             "defaultValue": {},
             "metadata": {
-                "description": "${label.tagsLabel}"
+                "description": "Tags for the resources."
             }
         },
         "usePreviewImage": {
@@ -306,7 +306,7 @@
         "name_virtualNetwork": "[parameters('virtualNetworkName')]",
         "name_vmPrefix": "[concat(parameters('managedVMNamePrefix'), 'StorageVM')]",
         "name_wlsServerPrefix": "[concat(parameters('managedServerPrefix'),'Storage')]",
-        "ref_subnet": "[resourceId(parameters('virtualNetworkResourceGroupName'),'${identifier.virtualNetworks}/subnets', variables('name_virtualNetwork'), variables('name_subnet'))]",
+        "ref_subnet": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', variables('name_virtualNetwork'), variables('name_subnet'))]",
         "name_customHostnameGeneratorscriptFile": "generateCustomHostNameVerifier.sh",
         "name_customHostnameVerifierJavaFile": "src/main/java/WebLogicCustomHostNameVerifier.java",
         "name_customHostnameValuesTemplate": "src/main/java/HostNameValuesTemplate.txt",
@@ -333,10 +333,10 @@
     ],
     "resources": [
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
-            "name": "${cluster.coherence.start}",
+            "apiVersion": "2023-07-01",
+            "name": "157eab40-12ae-11eb-adc1-0242ac120002",
             "type": "Microsoft.Resources/deployments",
-            "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
+            "tags": "[parameters('tagsByResource')['Microsoft resources deployment']]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -348,9 +348,9 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
-            "type": "${identifier.publicIPAddresses}",
-            "tags": "[parameters('tagsByResource')['${identifier.publicIPAddresses}']]",
+            "apiVersion": "2023-06-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "tags": "[parameters('tagsByResource')['Microsoft.Network/publicIPAddresses']]",
             "name": "[concat(variables('name_vmPrefix'),copyIndex(1),variables('name_publicIPAddress'))]",
             "location": "[parameters('location')]",
             "copy": {
@@ -365,15 +365,15 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
-            "type": "${identifier.virtualNetworks}/subnets",
+            "apiVersion": "2023-06-01",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
             "name": "[concat(variables('name_virtualNetwork'), '/', variables('name_subnet'))]",
             "condition": "[and(empty(variables('name_virtualNetwork')), empty(variables('name_subnet')))]"
         },
         {
-            "apiVersion": "${azure.apiVersionForNetworkInterfaces}",
-            "type": "${identifier.networkInterfaces}",
-            "tags": "[parameters('tagsByResource')['${identifier.networkInterfaces}']]",
+            "apiVersion": "2023-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "tags": "[parameters('tagsByResource')['Microsoft.Network/networkInterfaces']]",
             "name": "[concat(variables('name_vmPrefix'), copyIndex(1), variables('name_nic'))]",
             "location": "[parameters('location')]",
             "copy": {
@@ -381,7 +381,7 @@
                 "count": "[parameters('numberOfCoherenceCacheInstances')]"
             },
             "dependsOn": [
-                "[resourceId('${identifier.publicIPAddresses}/', concat(variables('name_vmPrefix'),copyIndex(1),variables('name_publicIPAddress')))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('name_vmPrefix'),copyIndex(1),variables('name_publicIPAddress')))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -390,7 +390,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('${identifier.publicIPAddresses}',concat(variables('name_vmPrefix'),copyIndex(1),variables('name_publicIPAddress')))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('name_vmPrefix'),copyIndex(1),variables('name_publicIPAddress')))]"
                             },
                             "subnet": {
                                 "id": "[variables('ref_subnet')]"
@@ -404,9 +404,9 @@
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
-            "type": "${identifier.virtualMachines}",
-            "tags": "[parameters('tagsByResource')['${identifier.virtualMachines}']]",
+            "apiVersion": "2024-11-01",
+            "type": "Microsoft.Compute/virtualMachines",
+            "tags": "[parameters('tagsByResource')['Microsoft.Compute/virtualMachines']]",
             "name": "[concat(variables('name_vmPrefix'), copyIndex(1))]",
             "location": "[parameters('location')]",
             "copy": {
@@ -443,14 +443,14 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('${identifier.networkInterfaces}',concat(variables('name_vmPrefix'), copyIndex(1), variables('name_nic')))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('name_vmPrefix'), copyIndex(1), variables('name_nic')))]"
                         }
                     ]
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[reference(resourceId('${identifier.storageAccounts}/', parameters('storageAccountName')), '${azure.apiVersionForStorage}').primaryEndpoints.blob]"
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName')), '2025-01-01').primaryEndpoints.blob]"
                     }
                 }
             },
@@ -461,10 +461,10 @@
             }
         },
         {
-            "type": "${identifier.virtualMachines}/extensions",
-            "tags": "[parameters('tagsByResource')['${identifier.virtualMachinesExtensions}']]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "tags": "[parameters('tagsByResource')['Virtual machine extension']]",
             "name": "[if(equals(copyIndex(),0),concat(parameters('adminVMName'),'/newuserscript'),concat(variables('name_vmPrefix'), copyIndex(),'/newuserscript'))]",
-            "apiVersion": "${azure.apiVersionForAvailabilitySets}",
+            "apiVersion": "2024-11-01",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "virtualMachineExtensionLoop",
@@ -488,15 +488,15 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('sh',' ',variables('name_scriptFile'), ' <<< \"', parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ', parameters('adminVMName'),' ',parameters('adminVMNamePrefix'),' ',parameters('_globalResourceNameSuffix'),' ',parameters('numberOfCoherenceCacheInstances'),' ',variables('name_vmPrefix'),' ',variables('const_wlsHome'),' ',variables('const_wlsDomainPath'),' ', parameters('storageAccountName'),' ',listKeys(resourceId('${identifier.storageAccounts}', parameters('storageAccountName')), '${azure.apiVersionForStorage}').keys[0].value,' ', variables('const_mountPointPath'),' ', parameters('enableCoherenceWebLocalStorage'),' ',variables('name_wlsServerPrefix'),' ',copyIndex(),' ',if(parameters('enableDNSConfiguration'),parameters('customDNSNameForAdminServer'),parameters('adminVMName')),' ',parameters('dnsLabelPrefix'),' ',parameters('location'),' ','False',' ',string(parameters('enableCustomSSL')),' ',base64(parameters('sslCustomIdentityKeyStoreData')),' ',base64(parameters('sslCustomIdentityKeyStorePassPhrase')),' ',base64(parameters('sslCustomIdentityKeyStoreType')),' ',base64(parameters('sslCustomTrustKeyStoreData')),' ',base64(parameters('sslCustomTrustKeyStorePassPhrase')),' ',base64(parameters('sslCustomTrustKeyStoreType')),' ',base64(parameters('sslPrivateKeyAlias')),' ',base64(parameters('sslPrivateKeyPassPhrase')),'\"')]"
+                    "commandToExecute": "[concat('sh',' ',variables('name_scriptFile'), ' <<< \"', parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ', parameters('adminVMName'),' ',parameters('adminVMNamePrefix'),' ',parameters('_globalResourceNameSuffix'),' ',parameters('numberOfCoherenceCacheInstances'),' ',variables('name_vmPrefix'),' ',variables('const_wlsHome'),' ',variables('const_wlsDomainPath'),' ', parameters('storageAccountName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2025-01-01').keys[0].value,' ', variables('const_mountPointPath'),' ', parameters('enableCoherenceWebLocalStorage'),' ',variables('name_wlsServerPrefix'),' ',copyIndex(),' ',if(parameters('enableDNSConfiguration'),parameters('customDNSNameForAdminServer'),parameters('adminVMName')),' ',parameters('dnsLabelPrefix'),' ',parameters('location'),' ','False',' ',string(parameters('enableCustomSSL')),' ',base64(parameters('sslCustomIdentityKeyStoreData')),' ',base64(parameters('sslCustomIdentityKeyStorePassPhrase')),' ',base64(parameters('sslCustomIdentityKeyStoreType')),' ',base64(parameters('sslCustomTrustKeyStoreData')),' ',base64(parameters('sslCustomTrustKeyStorePassPhrase')),' ',base64(parameters('sslCustomTrustKeyStoreType')),' ',base64(parameters('sslPrivateKeyAlias')),' ',base64(parameters('sslPrivateKeyPassPhrase')),'\"')]"
                 }
             }
         },
         {
-            "apiVersion": "${azure.apiVersionForContainerRegistries}",
-            "name": "${cluster.coherence.end}",
+            "apiVersion": "2023-07-01",
+            "name": "157eaa6e-12ae-11eb-adc1-0242ac120002",
             "type": "Microsoft.Resources/deployments",
-            "tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
+            "tags": "[parameters('tagsByResource')['Microsoft resources deployment']]",
             "dependsOn": [
                 "virtualMachineExtensionLoop"
             ],

@@ -26,10 +26,10 @@
 	},
 	"resources": [
 		{
-			"type": "${identifier.networkSecurityGroups}/securityRules",
+			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
 			"name": "[concat(parameters('networkSecurityGroupName'),'/','WebLogicAdminPortsAllowed')]",
 			"condition": "[not(parameters('denyPublicTrafficForAdminServer'))]",
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+			"apiVersion": "2023-06-01",
 			"properties": {
 				"protocol": "TCP",
 				"sourcePortRange": "*",
@@ -45,10 +45,10 @@
 			}
 		},
 		{
-			"type": "${identifier.networkSecurityGroups}/securityRules",
+			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
 			"name": "[concat(parameters('networkSecurityGroupName'),'/','WebLogicAdminPortsDenied')]",
 			"condition": "[parameters('denyPublicTrafficForAdminServer')]",
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+			"apiVersion": "2023-06-01",
 			"properties": {
 				"protocol": "*",
 				"sourcePortRange": "*",
@@ -64,10 +64,10 @@
 			}
 		},
 		{
-			"type": "${identifier.networkSecurityGroups}/securityRules",
+			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
 			"name": "[concat(parameters('networkSecurityGroupName'),'/','WebLogiManagedPortsAllowed')]",
 			"condition": "[and(not(parameters('denyPublicTrafficForManagedServer')), parameters('enableAppGateway'))]",
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+			"apiVersion": "2023-06-01",
 			"properties": {
 				"protocol": "*",
 				"sourcePortRange": "*",
@@ -82,10 +82,10 @@
 			}
 		},
 		{
-			"type": "${identifier.networkSecurityGroups}/securityRules",
+			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
 			"name": "[concat(parameters('networkSecurityGroupName'),'/','WebLogiManagedPortsDenied')]",
 			"condition": "[and(parameters('denyPublicTrafficForManagedServer'), parameters('enableAppGateway'))]",
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
+			"apiVersion": "2023-06-01",
 			"properties": {
 				"protocol": "*",
 				"sourcePortRange": "*",

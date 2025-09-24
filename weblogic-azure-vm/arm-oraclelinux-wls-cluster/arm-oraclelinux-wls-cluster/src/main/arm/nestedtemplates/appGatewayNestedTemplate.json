@@ -112,7 +112,7 @@
             "type": "object",
             "defaultValue": {},
             "metadata": {
-                "description": "${label.tagsLabel}"
+                "description": "Tags for the resources."
             }
         },
         "virtualNetworkNewOrExisting": {
@@ -223,24 +223,24 @@
 				"id": "[variables('ref_backendProbe')]"
 			}
 		},
-		"ref_appGatewayPublicIP": "[resourceId('${identifier.publicIPAddresses}',parameters('gatewayPublicIPAddressName'))]",
-		"ref_appGatewaySubnet": "[resourceId(parameters('virtualNetworkResourceGroupName'),'${identifier.virtualNetworks}/subnets', variables('name_virtualNetwork'), variables('name_appGatewaySubnet'))]",
-		"ref_backendAddressPool": "[resourceId('${identifier.applicationGateways}/backendAddressPools', parameters('appGatewayName'),variables('name_backendAddressPool'))]",
-		"ref_backendHttpSettings": "[resourceId('${identifier.applicationGateways}/backendHttpSettingsCollection', parameters('appGatewayName'),variables('name_httpSetting'))]",
-		"ref_backendProbe": "[resourceId('${identifier.applicationGateways}/probes', parameters('appGatewayName'),variables('name_probe'))]",
-		"ref_frontendHTTPPort": "[resourceId('${identifier.applicationGateways}/frontendPorts', parameters('appGatewayName'),variables('name_httpPort'))]",
-		"ref_frontendHTTPSPort": "[resourceId('${identifier.applicationGateways}/frontendPorts', parameters('appGatewayName'),variables('name_httpsPort'))]",
-		"ref_frontendIPConfiguration": "[resourceId('${identifier.applicationGateways}/frontendIPConfigurations', parameters('appGatewayName'),variables('name_frontEndIPConfig'))]",
-		"ref_httpListener": "[resourceId('${identifier.applicationGateways}/httpListeners', parameters('appGatewayName'),variables('name_httpListener'))]",
-		"ref_httpsListener": "[resourceId('${identifier.applicationGateways}/httpListeners', parameters('appGatewayName'),variables('name_httpsListener'))]",
-		"ref_sslCertificate": "[resourceId('${identifier.applicationGateways}/sslCertificates', parameters('appGatewayName'),variables('name_appGatewayCertificate'))]"
+		"ref_appGatewayPublicIP": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayPublicIPAddressName'))]",
+		"ref_appGatewaySubnet": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', variables('name_virtualNetwork'), variables('name_appGatewaySubnet'))]",
+		"ref_backendAddressPool": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools', parameters('appGatewayName'),variables('name_backendAddressPool'))]",
+		"ref_backendHttpSettings": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', parameters('appGatewayName'),variables('name_httpSetting'))]",
+		"ref_backendProbe": "[resourceId('Microsoft.Network/applicationGateways/probes', parameters('appGatewayName'),variables('name_probe'))]",
+		"ref_frontendHTTPPort": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts', parameters('appGatewayName'),variables('name_httpPort'))]",
+		"ref_frontendHTTPSPort": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts', parameters('appGatewayName'),variables('name_httpsPort'))]",
+		"ref_frontendIPConfiguration": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', parameters('appGatewayName'),variables('name_frontEndIPConfig'))]",
+		"ref_httpListener": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', parameters('appGatewayName'),variables('name_httpListener'))]",
+		"ref_httpsListener": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', parameters('appGatewayName'),variables('name_httpsListener'))]",
+		"ref_sslCertificate": "[resourceId('Microsoft.Network/applicationGateways/sslCertificates', parameters('appGatewayName'),variables('name_appGatewayCertificate'))]"
 	},
 	"resources": [
 		{
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "${azure.apiVersionForContainerRegistries}",
-			"tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
-			"name": "${cluster.appgateway.start}",
+			"apiVersion": "2023-07-01",
+			"tags": "[parameters('tagsByResource')['Microsoft resources deployment']]",
+			"name": "4f85ce49-6de4-5925-b77c-3eb15ba97921",
 			"properties": {
 				"mode": "Incremental",
 				"template": {
@@ -252,9 +252,9 @@
 			}
 		},
 		{
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
-			"type": "${identifier.publicIPAddresses}",
-			"tags": "[parameters('tagsByResource')['${identifier.publicIPAddresses}']]",
+			"apiVersion": "2023-06-01",
+			"type": "Microsoft.Network/publicIPAddresses",
+			"tags": "[parameters('tagsByResource')['Microsoft.Network/publicIPAddresses']]",
 			"name": "[parameters('gatewayPublicIPAddressName')]",
 			"sku": {
 				"name": "Standard"
@@ -268,13 +268,13 @@
 			}
 		},
 		{
-			"type": "${identifier.applicationGateways}",
-			"apiVersion": "${azure.apiVersionForNetworkInterfaces}",
-			"tags": "[parameters('tagsByResource')['${identifier.applicationGateways}']]",
+			"type": "Microsoft.Network/applicationGateways",
+			"apiVersion": "2023-06-01",
+			"tags": "[parameters('tagsByResource')['Microsoft.Network/applicationGateways']]",
 			"name": "[parameters('appGatewayName')]",
 			"location": "[parameters('location')]",
 			"dependsOn": [
-				"[resourceId('${identifier.publicIPAddresses}', parameters('gatewayPublicIPAddressName'))]"
+				"[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicIPAddressName'))]"
 			],
 			"properties": {
 				"sku": {
@@ -289,13 +289,13 @@
 								"id": "[variables('ref_appGatewaySubnet')]"
 							}
 						},
-						"type": "${identifier.applicationGateways}/gatewayIPConfigurations"
+						"type": "Microsoft.Network/applicationGateways/gatewayIPConfigurations"
 					}
 				],
 				"frontendIPConfigurations": [
 					{
 						"name": "appGwPublicFrontendIp",
-						"type": "${identifier.applicationGateways}/frontendIPConfigurations",
+						"type": "Microsoft.Network/applicationGateways/frontendIPConfigurations",
 						"properties": {
 							"publicIPAddress": {
 								"id": "[variables('ref_appGatewayPublicIP')]"
@@ -309,14 +309,14 @@
 						"properties": {
 							"port": "[int(variables('const_appGatewayFrontEndHTTPPort'))]"
 						},
-						"type": "${identifier.applicationGateways}/frontendPorts"
+						"type": "Microsoft.Network/applicationGateways/frontendPorts"
 					},
 					{
 						"name": "https_port",
 						"properties": {
 							"port": "[int(variables('const_appGatewayFrontEndHTTPSPort'))]"
 						},
-						"type": "${identifier.applicationGateways}/frontendPorts"
+						"type": "Microsoft.Network/applicationGateways/frontendPorts"
 					}
 				],
 				"sslCertificates": [
@@ -338,12 +338,12 @@
 									"name": "BackendAddresses",
 									"count": "[sub(int(parameters('numberOfInstances')),1)]",
 									"input": {
-										"ipAddress": "[reference(resourceId('${identifier.networkInterfaces}', concat(variables('name_managedVMNamePrefix'), copyIndex('BackendAddresses',1), if(equals(parameters('virtualNetworkNewOrExisting'), 'new'), variables('name_nic_with_pub_ip'), variables('name_nic_without_pub_ip')))),'${azure.apiVersionForNetworkInterfaces}').ipConfigurations[0].properties.privateIPAddress]"
+										"ipAddress": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('name_managedVMNamePrefix'), copyIndex('BackendAddresses',1), if(equals(parameters('virtualNetworkNewOrExisting'), 'new'), variables('name_nic_with_pub_ip'), variables('name_nic_without_pub_ip')))),'2023-06-01').ipConfigurations[0].properties.privateIPAddress]"
 									}
 								}
 							]
 						},
-						"type": "${identifier.applicationGateways}/backendAddressPools"
+						"type": "Microsoft.Network/applicationGateways/backendAddressPools"
 					}
 				],
 				"backendHttpSettingsCollection": [
@@ -351,7 +351,7 @@
 						"name": "myHTTPSetting",
 						// Solve the URL redirection issue
 						"properties": "[if(parameters('overrideHostName'), variables('obj_HTTPSettingsCustomDNS'),variables('obj_HTTPSettingsDefault'))]",
-						"type": "${identifier.applicationGateways}/backendHttpSettingsCollection"
+						"type": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection"
 					}
 				],
 				"httpListeners": [
@@ -367,7 +367,7 @@
 							"protocol": "Http",
 							"requireServerNameIndication": false
 						},
-						"type": "${identifier.applicationGateways}/httpListeners"
+						"type": "Microsoft.Network/applicationGateways/httpListeners"
 					},
 					{
 						"name": "HTTPSListener",
@@ -384,7 +384,7 @@
 								"id": "[variables('ref_sslCertificate')]"
 							}
 						},
-						"type": "${identifier.applicationGateways}/httpListeners"
+						"type": "Microsoft.Network/applicationGateways/httpListeners"
 					}
 
 				],
@@ -404,7 +404,7 @@
 								"id": "[variables('ref_backendHttpSettings')]"
 							}
 						},
-						"type": "${identifier.applicationGateways}/requestRoutingRules"
+						"type": "Microsoft.Network/applicationGateways/requestRoutingRules"
 					},
 					{
 						"name": "HTTPSRoutingRule",
@@ -421,7 +421,7 @@
 								"id": "[variables('ref_backendHttpSettings')]"
 							}
 						},
-						"type": "${identifier.applicationGateways}/requestRoutingRules"
+						"type": "Microsoft.Network/applicationGateways/requestRoutingRules"
 					}
 				],
 				"probes": [
@@ -441,7 +441,7 @@
 								]
 							}
 						},
-						"type": "${identifier.applicationGateways}/probes"
+						"type": "Microsoft.Network/applicationGateways/probes"
 					}
 				],
 				"webApplicationFirewallConfiguration": {
@@ -458,13 +458,13 @@
 			}
 		},
 		{
-			"apiVersion": "${azure.apiVersionForAvailabilitySets}",
-			"type": "${identifier.virtualMachines}/extensions",
-			"tags": "[parameters('tagsByResource')['${identifier.virtualMachinesExtensions}']]",
+			"apiVersion": "2024-11-01",
+			"type": "Microsoft.Compute/virtualMachines/extensions",
+			"tags": "[parameters('tagsByResource')['Virtual machine extension']]",
 			"name": "[concat(parameters('adminVMName'),'/newuserscript')]",
 			"location": "[parameters('location')]",
 			"dependsOn": [
-				"[resourceId('${identifier.applicationGateways}', parameters('appGatewayName'))]"
+				"[resourceId('Microsoft.Network/applicationGateways', parameters('appGatewayName'))]"
 			],
 			"properties": {
 				"publisher": "Microsoft.Azure.Extensions",
@@ -477,17 +477,17 @@
 					]
 				},
 				"protectedSettings": {
-					"commandToExecute": "[concat('sh',' ',variables('name_scriptAGWConfiguration'),'  <<< \"', variables('const_adminServerName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('adminVMName'),' ',variables('const_wlsAdminPort'),' ', if(parameters('overrideHostName'), parameters('customDomainName'), reference(variables('ref_appGatewayPublicIP'), '${azure.apiVersionForNetworkInterfaces}').dnsSettings.fqdn), ' ',variables('const_wlsHome'),'\"')]"
+					"commandToExecute": "[concat('sh',' ',variables('name_scriptAGWConfiguration'),'  <<< \"', variables('const_adminServerName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('adminVMName'),' ',variables('const_wlsAdminPort'),' ', if(parameters('overrideHostName'), parameters('customDomainName'), reference(variables('ref_appGatewayPublicIP'), '2023-06-01').dnsSettings.fqdn), ' ',variables('const_wlsHome'),'\"')]"
 				}
 			}
 		},
 		{
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "${azure.apiVersionForContainerRegistries}",
-			"tags": "[parameters('tagsByResource')['${identifier.resourcesDeployment}']]",
-			"name": "${cluster.appgateway.end}",
+			"apiVersion": "2023-07-01",
+			"tags": "[parameters('tagsByResource')['Microsoft resources deployment']]",
+			"name": "b626bee4-b322-5418-990f-6463a799be3c",
 			"dependsOn": [
-                "[resourceId('${identifier.virtualMachines}/extensions', parameters('adminVMName'), 'newuserscript')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
 			"properties": {
 				"mode": "Incremental",
@@ -503,15 +503,15 @@
 	"outputs": {
 		"appGatewayAlias": {
 			"type": "string",
-			"value": "[reference(variables('ref_appGatewayPublicIP'), '${azure.apiVersionForNetworkInterfaces}').dnsSettings.fqdn]"
+			"value": "[reference(variables('ref_appGatewayPublicIP'), '2023-06-01').dnsSettings.fqdn]"
 		},
 		"appGatewayURL": {
 			"type": "string",
-			"value": "[uri(format('http://{0}',reference(variables('ref_appGatewayPublicIP'), '${azure.apiVersionForNetworkInterfaces}').dnsSettings.fqdn),'')]"
+			"value": "[uri(format('http://{0}',reference(variables('ref_appGatewayPublicIP'), '2023-06-01').dnsSettings.fqdn),'')]"
 		},
 		"appGatewaySecuredURL": {
 			"type": "string",
-			"value": "[uri(format('https://{0}',reference(variables('ref_appGatewayPublicIP'), '${azure.apiVersionForNetworkInterfaces}').dnsSettings.fqdn),'')]"
+			"value": "[uri(format('https://{0}',reference(variables('ref_appGatewayPublicIP'), '2023-06-01').dnsSettings.fqdn),'')]"
 		}
 	}
 }
